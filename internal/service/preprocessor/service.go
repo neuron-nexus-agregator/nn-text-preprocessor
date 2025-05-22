@@ -29,6 +29,7 @@ func (p *Preprocessor) Start() {
 }
 
 func (p *Preprocessor) Process(text model.Item) model.Item {
+	l := text.Description
 	text.Title = p.clearHTML(text.Title, false)
 	text.Description = p.clearHTML(text.Description, false)
 	text.FullText = p.clearHTML(text.FullText, true)
@@ -37,6 +38,11 @@ func (p *Preprocessor) Process(text model.Item) model.Item {
 			text.Description = text.Description[:256]
 		}
 		text.Description = strings.TrimSpace(text.Description) + "..."
+	} else if len(l) > len(text.Description) {
+		text.FullText = text.Description
+		if len(text.Description) > 256 {
+			text.Description = text.Description[:256]
+		}
 	}
 	return text
 }
