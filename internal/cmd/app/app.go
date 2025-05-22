@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"agregator/preprocessor/internal/interfaces"
 	"agregator/preprocessor/internal/service/kafka"
 	"agregator/preprocessor/internal/service/preprocessor"
 )
@@ -14,11 +15,11 @@ type App struct {
 	kafka        *kafka.Kafka
 }
 
-func New(updateDBDuration time.Duration) (*App, error) {
-	preprocessor := preprocessor.New(30)
+func New(updateDBDuration time.Duration, logger interfaces.Logger) (*App, error) {
+	preprocessor := preprocessor.New(30, logger)
 	brokers := []string{os.Getenv("KAFKA_ADDR")}
 	writeTopic := "filter"
-	kafka := kafka.New(brokers, writeTopic)
+	kafka := kafka.New(brokers, writeTopic, logger)
 	return &App{
 		preprocessor: preprocessor,
 		kafka:        kafka,
