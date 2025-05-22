@@ -32,8 +32,8 @@ func (p *Preprocessor) Process(text model.Item) model.Item {
 	text.Title = p.clearHTML(text.Title, false)
 	text.Description = p.clearHTML(text.Description, false)
 	text.FullText = p.clearHTML(text.FullText, true)
-	if text.Description == p.clearHTML(text.FullText, false) && !strings.Contains(text.FullText, "Доступно только описание") {
-		if len(text.Description) > 256 {
+	if !strings.Contains(text.FullText, "Доступно только описание") {
+		if p.cosineSimilarity(text.FullText, text.Description) > 0.9 && len(text.Description) > 256 {
 			text.Description = text.Description[:256]
 		}
 		text.Description = strings.TrimSpace(text.Description) + "..."
