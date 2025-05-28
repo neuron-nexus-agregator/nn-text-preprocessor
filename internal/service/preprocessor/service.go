@@ -1,8 +1,6 @@
 package preprocessor
 
 import (
-	"strings"
-
 	model "agregator/preprocessor/internal/model/kafka"
 
 	"agregator/preprocessor/internal/interfaces"
@@ -32,21 +30,20 @@ func (p *Preprocessor) Start() {
 }
 
 func (p *Preprocessor) Process(text model.Item) model.Item {
-	l := text.Description
+	//l := text.Description
 	text.Title = p.clearHTML(text.Title, false)
 	text.Description = p.clearHTML(text.Description, false)
 	text.FullText = p.clearHTML(text.FullText, true)
-	if !strings.Contains(text.FullText, "Доступно только описание") {
-		if p.cosineSimilarity(text.FullText, text.Description) > 0.9 && len(text.Description) > 256 {
-			text.Description = text.Description[:256]
-		}
-		text.Description = strings.TrimSpace(text.Description) + "..."
-	} else if len(l) > len(text.Description) {
-		text.FullText = p.clearHTML(l, true)
-		if len(text.Description) > 256 {
-			text.Description = text.Description[:256]
-		}
-	}
+	// if !strings.Contains(text.FullText, "Доступно только описание") {
+	// 	if p.cosineSimilarity(text.FullText, text.Description) > 0.9 && len(text.Description) > 256 {
+	// 		text.Description = text.Description[:256] + "..."
+	// 	}
+	// } else if len(l) > len(text.Description) {
+	// 	text.FullText = p.clearHTML(l, true)
+	// 	if len(text.Description) > 256 {
+	// 		text.Description = text.Description[:256] + "..."
+	// 	}
+	// }
 	return text
 }
 
